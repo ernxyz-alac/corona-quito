@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corona</title>
+    <style>
+        /* ============================================
+       CUSTOM FONTS
+       ============================================ */
+        @font-face {
+            font-family: "Corona Font";
+            src: url('./fonts/corona-font.otf');
+        }
+
+        /* ============================================
+       BASE STYLES
+       ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Corona Font", "Corona Font", sans-serif;
+            overflow: hidden;
+        }
+
+        #main-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        #bg-img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+        }
+
+        /* ============================================
+       COUNTDOWN POSITIONING - EASY TO ADJUST!
+
+       Modify these CSS variables to move the countdown:
+       - Use 'auto' to disable a direction
+       - Adjust percentages or vh/vw units as needed
+       ============================================ */
+        :root {
+            /* Main countdown position */
+            --weather-font-color: #63A4E4;
+            --weather-top: 54%;
+            --weather-bottom: auto;
+            --weather-left: auto;
+            --weather-right: 15%;
+            --weather-transform: translateX(-50%);
+
+            /* Font sizes */
+            --weather-icon-size: 3rem;
+            --weather-degrees-size: 18vh;
+
+            /* Colors - Christmas themed */
+            --weather-color: #ffffff;
+            --weather-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+
+            /* Main countdown position */
+            --time-top: 0%;
+            --time-bottom: auto;
+            --time-left: auto;
+            --time-right: 5%;
+            --time-transform: auto;
+
+            /* Font sizes */
+            --time-size: 26vh;
+            --time-am-pm-size: 15vh;
+
+            /* Colors - Christmas themed */
+            --time-color: #ffffff;
+            --time-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ============================================
+       TIME STYLES
+       ============================================ */
+        #time-container {
+            position: fixed;
+            top: var(--time-top);
+            bottom: var(--time-bottom);
+            left: var(--time-left);
+            right: var(--time-right);
+            transform: var(--time-transform);
+
+            display: flex;
+            gap: 3vw;
+            z-index: 100;
+
+            color: var(--time-color);
+            /* text-shadow: var(--time-shadow); */
+            text-align: center;
+        }
+
+        #time-item {
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+            gap: 1vw;
+        }
+
+        #time {
+            font-family: "Corona Font", sans-serif;
+            font-size: var(--time-size);
+            text-transform: uppercase;
+            font-weight: bold;
+            color: var(--time-color);
+        }
+
+        #time-am-pm {
+            font-family: "Corona Font", sans-serif;
+            font-size: var(--time-am-pm-size);
+            text-transform: uppercase;
+            font-weight: bold;
+            color: var(--time-color);
+        }
+
+
+
+        /* ============================================
+       WEATHER STYLES
+       ============================================ */
+        #weather-container {
+            position: fixed;
+            top: var(--weather-top);
+            bottom: var(--weather-bottom);
+            left: var(--weather-left);
+            right: var(--weather-right);
+            transform: var(--weather-transform);
+
+            display: flex;
+            gap: 3vw;
+            z-index: 100;
+
+            color: var(--weather-color);
+            /* text-shadow: var(--weather-shadow); */
+            text-align: center;
+        }
+
+        #weather-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #weather-icon {
+            font-family: "Corona Font", sans-serif;
+            width: var(--weather-icon-size);
+            height: var(--weather-icon-size);
+            margin-top: -.5rem;
+        }
+
+        #weather-degrees {
+            font-family: "Corona Font", sans-serif;
+            font-size: var(--weather-degrees-size);
+            text-transform: uppercase;
+            font-weight: bold;
+            color: var(--weather-font-color);
+        }
+
+        /* ============================================
+       RESPONSIVE STYLES PER SCREEN SIZE
+       Adjust countdown position for each video size
+       ============================================ */
+        @media screen and (min-width: 768) {
+
+        }
+        @media screen and (min-width: 800px) {
+            #weather-container {
+                right: 13.5%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main-container">
+        <!-- Time display -->
+        <div id="time-container">
+            <div id="time-item">
+                <span id="time">12:00</span> 
+                <span id="time-am-pm">PM</span>
+            </div>
+        </div>
+
+        <!-- Weather display -->
+        <div id="weather-container">
+            <div id="weather-item">
+                <span id="weather-degrees">15°</span>
+            </div>
+        </div>
+
+        <!-- Background Image -->
+        <img
+            id="bg-img"
+            src="./media/img/morning.jpg"
+            alt=""
+        />
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Get URL parameters for screen size
+            // const urlParams = new URLSearchParams(window.location.search);
+            // const targetWidth = parseInt(urlParams.get('width')) || window.innerWidth;
+            // const targetHeight = parseInt(urlParams.get('height')) || window.innerHeight;
+
+            // ============================================
+            // HTML ELEMENTS
+            // ============================================
+            const bgImgEl = document.getElementById('bg-img');
+            const TimeEl = document.getElementById('time');
+            const AmPm = document.getElementById('time-am-pm');
+            const weatherDegreesEl = document.getElementById('weather-degrees');
+
+            // ============================================
+            // IMG
+            // ============================================
+            const morningImg = "./media/img/morning.jpg"
+            const afternoonImg = "./media/img/afternoon.jpg"
+            const eveningImg = "./media/img/evening.jpg"
+
+            // ============================================
+            // HELPER FUNCTIONS
+            // ============================================
+
+            // fetch weather data from api
+            const fetchWeather = async () => {
+                // const coord = await fetch(`https://apialacooh.alacoohecuador.com/playlist/panel/1`);
+                // const resp = await coord.json()
+                // console.log(
+                //     resp.data[0].point.coordinates
+                // ) 
+
+                const [long, lat] = [-0.15817149006332287, -78.48400324232799] // fetched from panel id 1 above
+                const response = await fetch(`https://weatherstation.alacoohperu.pe/api/clima/${long}/${lat}`);
+                const respAux = await response.json();
+
+                const temperature = respAux.data.main.temp.toString().split('.')[0]
+                const description = respAux.data.weather[0].description
+
+                return {
+                    temperature,
+                    description,
+                }
+            }
+
+            const getTime = (format24h = false) => {
+                const currentDate = new Date()
+
+                if (format24h) {
+                    return currentDate.toLocaleTimeString('en-US', {
+                        timeZone: 'America/Guayaquil',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false,
+                    });
+                }
+
+                return currentDate.toLocaleTimeString('en-US', {
+                    timeZone: 'America/Guayaquil',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true,
+                });
+            }
+
+            const setTime = () => {
+                const time12 = getTime()
+                const amOrPm = time12.split(" ")[1]
+                const time24 = getTime(true)
+
+                TimeEl.innerText = time24
+                AmPm.innerText = amOrPm
+            }
+
+            // set temperature
+            const setTemperature = (temp) => {
+                weatherDegreesEl.innerText = temp + "°";
+            }
+
+            // return morning, afternoon, evening
+            const timeOfTheDay = () => {
+                const currentTime = getTime(true)
+                const [hours] = currentTime.split(":").map(Number)
+
+                if (hours >= 6 && hours < 12) {
+                    return "morning"
+                } else if (hours >= 12 && hours < 18) {
+                    return "afternoon"
+                } else {
+                    return "evening"
+                }
+            }
+
+            const setBgImg = () => {
+                const time = timeOfTheDay()
+                if (time === "morning") {
+                    bgImgEl.src = morningImg
+                } else if (time === "afternoon") {
+                    bgImgEl.src = afternoonImg
+                } else {
+                    bgImgEl.src = eveningImg
+                }
+            }
+
+            // ===========================
+            // MAIN PROCESS
+            // ===========================
+            setBgImg()
+            const { temperature, description, } = await fetchWeather()
+            setTemperature(temperature)
+            setTime()
+        });
+    </script>
+
+</body>
+
+</html>
